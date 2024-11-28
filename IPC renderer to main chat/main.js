@@ -4,6 +4,7 @@ import electron from 'electron';
 
 // ipc 
 import { ipcMain as ipc } from 'electron';
+import { dialog } from 'electron';
 
 import path from 'path'
 import url,{fileURLToPath} from 'url'
@@ -24,10 +25,8 @@ function createWindow(){
         width: 800,
         height: 600,
         webPreferences: {
-          preload: path.join(__dirname, 'preload.js'),
-          nodeIntegration: true,  // Allow access to Node.js APIs like ipcRenderer elase gives import error
+          nodeIntegration: true,    // Allow access to Node.js APIs like ipcRenderer elase gives import error
           contextIsolation: false,  // Disable context isolation 
-          sandbox: false, // fixes require() in preloader
         }
       });
 
@@ -47,14 +46,10 @@ function createWindow(){
 
 }
 
-// ipc channel 
-function handleSetTitle (event, title) {
-    const webContents = event.sender
-    const win = BrowserWindow.fromWebContents(webContents)
-    win.setTitle(title)
-}
-
-ipc.on('set-title', handleSetTitle)
+ipc.on('akatsuki-channel', (event, message) => {
+    console.log("Received message:", message);
+    dialog.showMessageBox({message:message})
+  });
 
 // we call the app only when the application is ready
 app.on('ready',createWindow);
