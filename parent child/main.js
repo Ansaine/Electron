@@ -18,7 +18,7 @@ let parent, child1,child2;
 function createWindow(){
 
     parent = new BrowserWindow();
-    child1 = new BrowserWindow({parent:parent});
+    child1 = new BrowserWindow({parent:parent,modal:true});
     child2 = new BrowserWindow({parent:parent});
 
     //parent
