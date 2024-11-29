@@ -12,3 +12,10 @@
     solution - use commonjs for preload script. Also try 'sandbox: false,' in webPreferences
 
  -  Context isolation
+
+ # IPC differences
+
+                  Renderer to Main	                        Main to Renderer
+   Sender	      ipcRenderer.send	                        webContents.send
+   Receiver	      ipcMain.on	                              ipcRenderer.on
+   Event Object	Includes a reply method for responses.	   Typically used for notifications or data push.
