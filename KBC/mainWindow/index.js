@@ -6,8 +6,9 @@ const captureBtn = document.getElementById('captureBtn');
 const beforeStartForm = document.getElementById("beforeStartForm");
 const afterStartForm = document.getElementById("afterStartForm");
 
-playBtn.addEventListener('click', () => {
-  ipcRenderer.send('start-game');  // send play signal
+playBtn.addEventListener('click', (event) => {
+  event.preventDefault();           // flickering issue
+  ipcRenderer.send('start-game');   // send play signal
 
   beforeStartForm.style.display='none';
   afterStartForm.style.display='block';
@@ -15,7 +16,8 @@ playBtn.addEventListener('click', () => {
 });
 
 // send signal to capture image 
-captureBtn.addEventListener('click',()=>{
+captureBtn.addEventListener('click',(event)=>{
+  event.preventDefault();
   ipcRenderer.send('capture');
 })
 
