@@ -1,17 +1,16 @@
-console.log("Started my app");
+console.log("Started main.js");
 
-import electron from 'electron';
-
-// ipc 
+import electron, { ipcMain } from 'electron';
 import { ipcMain as ipc } from 'electron';
-import { dialog } from 'electron';
-
-
 import path from 'path'
 import url,{fileURLToPath} from 'url'
+import { desktopCapturer } from 'electron';
+
+//flags
+const isMac = process.platform==='darwin'
 
 
-// we need two submodules
+// electron submodules
 const app = electron.app;                           // for events
 const BrowserWindow = electron.BrowserWindow;       // for UI
 
@@ -32,40 +31,48 @@ function createWindow(){
       });
 
     win.loadURL(url.format({
-        pathname : path.join(__dirname,'index.html'),
+        pathname : path.join(__dirname,'mainWindow/index.html'),
         protocol: 'file',
         slashes: true
     }))
 
-    //dev tool
     win.webContents.openDevTools();
-
-    // event that will be emmited when closed is clicked
     win.on('closed',()=>{
         win = null;
     })
-
 }
+
+
 
 // once it gets play signal from renderer
 ipc.on('start-game', ()=>{
     let gameWin;
-    gameWin = new BrowserWindow();
+    gameWin = new BrowserWindow({
+        width: 400,
+        height: 300
+    });
 
     gameWin.loadURL(url.format({
-        pathname : path.join(__dirname,'game.html'),
+        pathname : path.join(__dirname,'playWindow/game.html'),
         protocol: 'file',
         slashes: true
     }))
+
+    gameWin.webContents.openDevTools();
 })
 
-// we call the app only when the application is ready
+//screenshot
+ipc.on('capture',()=>{
+    // returns array of windows/screen objects, from there we choose the first image
+    desktopCapturer.getSources({types:['screen']}).then(sources=>{
+        let image = sources[0].thumbnail.toDataURL();
+        win.webContents.send('capture',image)
+    })
+})
+
+// app Events
+
 app.on('ready',createWindow);
-
-
-// For macOS
 app.on('window-all-closed',()=>{
-    if(process.platform!='darwin'){
-        app.quit();
-    }
+    if(!isMac)  app.quit();
 })
