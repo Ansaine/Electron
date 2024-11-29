@@ -21,8 +21,9 @@ captureBtn.addEventListener('click',(event)=>{
   ipcRenderer.send('capture');
 })
 
-// receive image 
+// receive image and only after that save button appears
 ipcRenderer.on('capture',(event,imageData)=>{
   document.getElementById('image').src=imageData
+  document.getElementById('save').style.display='block'
 })
 
