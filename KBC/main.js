@@ -7,14 +7,15 @@ import fs from 'fs'
 import url,{fileURLToPath} from 'url'
 import { desktopCapturer } from 'electron';
 
-//flags
+// flags
 const isMac = process.platform==='darwin'
 
 
+// modules
 const app = electron.app;                           // for events
 const BrowserWindow = electron.BrowserWindow;       // for UI
 
-
+// constants
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -45,9 +46,10 @@ function createWindow(){
 
 
 
+
 // once it gets play signal from renderer
 let gameWin;
-ipc.on('start-game', ()=>{
+function createGameWindow(){
     gameWin = new BrowserWindow({
         width: 750,
         height: 500,
@@ -67,8 +69,13 @@ ipc.on('start-game', ()=>{
         slashes: true
     }))
 
+    gameWin.on('closed',()=>{
+        gameWin = null;
+    })
+
     // gameWin.webContents.openDevTools();
-})
+}
+ipc.on('start-game', createGameWindow)
 
 // score update
 ipc.on('increment-score', ()=>{
@@ -114,7 +121,7 @@ ipc.on('save-image',async ()=>{
         await fs.promises.writeFile(savePath, base64Data, 'base64');
 
     }catch(err){
-        console.error('Error while sacing image :', err);
+        console.error('Error while saving image :', err);
     }
 })
 
@@ -124,7 +131,6 @@ ipc.on('close-game',()=>{
 })
 
 // app Events
-
 app.on('ready',createWindow);
 app.on('window-all-closed',()=>{
     if(!isMac)  app.quit();
