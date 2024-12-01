@@ -23,8 +23,8 @@ const __dirname = path.dirname(__filename);
 let win;
 function createWindow(){
     win = new BrowserWindow({
-        width: 1200,
-        height: 900,
+        width: 1000,
+        height: 700,
         title: 'Home Window',
         webPreferences: {
             sandbox: false,         // to allow screenshot
@@ -51,8 +51,10 @@ function createWindow(){
 ipc.on('start-game', ()=>{
     let gameWin;
     gameWin = new BrowserWindow({
-        width: 400,
-        height: 300,
+        width: 700,
+        height: 500,
+        parent: win,
+        modal: true,
         title: 'Game Window',
         webPreferences: {
             sandbox: false,         // to allow screenshot
