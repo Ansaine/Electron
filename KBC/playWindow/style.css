@@ -30,7 +30,7 @@ h2 {
 }
 
 
-button {
+span, button {
     background: #f7b32b;
     color: #000;
     font-size: 1.2rem;
@@ -45,12 +45,12 @@ button {
     text-align: center;
 }
 
-button:hover {
+span,button:hover {
     background: #ffc857;
     transform: scale(1.05);
 }
 
-button:active {
+span, button:active {
     transform: scale(0.95);
 }
 

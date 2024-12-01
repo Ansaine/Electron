@@ -11,12 +11,10 @@ import { desktopCapturer } from 'electron';
 const isMac = process.platform==='darwin'
 
 
-// electron submodules
 const app = electron.app;                           // for events
 const BrowserWindow = electron.BrowserWindow;       // for UI
 
 
-// Manually define __dirname in ES Modules as it is normally for commonJS 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -48,8 +46,8 @@ function createWindow(){
 
 
 // once it gets play signal from renderer
+let gameWin;
 ipc.on('start-game', ()=>{
-    let gameWin;
     gameWin = new BrowserWindow({
         width: 750,
         height: 500,
@@ -118,6 +116,11 @@ ipc.on('save-image',async ()=>{
     }catch(err){
         console.error('Error while sacing image :', err);
     }
+})
+
+//game close 
+ipc.on('close-game',()=>{
+    gameWin.close();
 })
 
 // app Events

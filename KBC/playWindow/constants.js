@@ -5,9 +5,9 @@ export const questions = [
       correct: "C",
     },
     {
-      question: "What is 2 + 2?",
-      options: ["A. 3", "B. 4", "C. 5", "D. 6"],
-      correct: "B",
+      question: "Who wrote the play 'Romeo and Juliet'?",
+      options: ["A. W. Shakespeare", "B. Charles Dickens", "C. Mark Twain", "D. J. Austen"],
+      correct: "A",
     },
     {
       question: "Which planet is known as the Red Planet?",
