@@ -51,7 +51,7 @@ function createWindow(){
 ipc.on('start-game', ()=>{
     let gameWin;
     gameWin = new BrowserWindow({
-        width: 700,
+        width: 750,
         height: 500,
         parent: win,
         modal: true,

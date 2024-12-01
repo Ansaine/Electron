@@ -1,11 +1,9 @@
-/* General Reset */
 body, html {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Background and Fonts */
 body {
     background: linear-gradient(135deg, #1e3c72, #2a5298);
     color: #fff;
@@ -18,25 +16,23 @@ body {
     overflow: hidden;
 }
 
-/* Styling the Main Form */
+
 form {
     text-align: center;
     background: rgba(0, 0, 0, 0.5);
-    padding: 30px;
+    padding: 20px;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    width: 80%;
-    max-width: 400px;
+    width: 90%;
+    max-width: 700px;
     margin-bottom: 20px; /* Space for the image below */
 }
 
-/* Headline Style */
 form h1 {
     font-size: 2rem;
     margin-bottom: 20px;
 }
 
-/* Button Styles */
 button {
     background: #f7b32b;
     color: #000;
@@ -57,21 +53,28 @@ button:active {
     transform: scale(0.95);
 }
 
-/* Inline Layout for After Start Form */
 #afterStartForm h1, 
 #afterStartForm button {
     display: inline-block;
-    vertical-align: middle;
-    margin-right: 10px;
+    width: auto; 
+
 }
 
-/* Image Container */
+#afterStartForm span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; 
+    margin-top: 10px; 
+}
+
+
 #image {
-    display: block; /* Ensures the image occupies a single block */
+    display: block; 
     margin-top: 20px;
-    max-width: 90%; /* Responsive scaling */
-    max-height: 720px; /* Ensures it fits 720p without exceeding screen */
+    max-width: 90%; 
+    max-height: 720px; 
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    object-fit: contain; /* Keeps the image aspect ratio intact */
+    object-fit: contain; /* Keeps image aspect ratio intact */
 }

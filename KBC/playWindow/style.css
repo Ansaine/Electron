@@ -4,7 +4,6 @@ body, html {
     box-sizing: border-box;
 }
 
-/* Background and Fonts */
 body {
     background: linear-gradient(135deg, #1e3c72, #2a5298);
     color: #fff;
@@ -17,21 +16,20 @@ body {
     overflow: hidden;
 }
 
-/* Styling the Game Header */
+/* Game Header */
 h2 {
     font-size: 2rem;
     margin-bottom: 20px;
     text-align: center;
 }
 
-/* Styling the Answer Section */
 #answer {
     font-size: 1.5rem;
     margin-top: 20px;
     text-align: center;
 }
 
-/* Button Styles */
+
 button {
     background: #f7b32b;
     color: #000;
@@ -59,7 +57,7 @@ button:active {
 /* Responsive Styling for Buttons */
 @media (max-width: 600px) {
     button {
-        width: 80%; /* Adjust button width on small screens */
-        font-size: 1rem; /* Smaller font size for smaller screens */
+        width: 80%; 
+        font-size: 1rem; 
     }
 }
