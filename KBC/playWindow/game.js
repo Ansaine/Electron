@@ -1,18 +1,23 @@
 
-// game logic
-import { questions } from "./constants.js";
+const {ipcRenderer} = require('electron')
+import {questions} from "./constants.js"
   
-const questionHeading = document.querySelector("h1");
+const questionHeading = document.querySelector("h2");
 const answerText = document.getElementById("answer");
 const buttons = Array.from(document.querySelectorAll("button"));
 
 let currentQuestionIndex = 0;
 
+//update score
+function incrementScore(){
+    ipcRenderer.send('increment-score')
+}
+
 // load the question
 function loadQuestion() {
 if (currentQuestionIndex < questions.length) {
     const currentQuestion = questions[currentQuestionIndex];
-    questionHeading.textContent = `Question ${currentQuestionIndex + 1}: ${currentQuestion.question}`;
+    questionHeading.textContent = `Question ${currentQuestionIndex + 1} / 3: ${currentQuestion.question}`;
     buttons.forEach((button, index) => {
     button.textContent = currentQuestion.options[index];
     });
@@ -30,11 +35,12 @@ function handleAnswer(selectedOption) {
 const currentQuestion = questions[currentQuestionIndex];
 if (selectedOption === currentQuestion.correct) {
     answerText.textContent = "Correct!";
+    incrementScore();
 } else {
     answerText.textContent = `Wrong! The correct answer is ${currentQuestion.correct}.`;
 }
 
-// short delay for next question
+// delay for next question
 setTimeout(() => {
     currentQuestionIndex++;
     loadQuestion();

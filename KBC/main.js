@@ -1,8 +1,9 @@
 console.log("Started main.js");
 
-import electron, { ipcMain } from 'electron';
-import { ipcMain as ipc } from 'electron';
+import electron from 'electron';
+import { ipcMain as ipc, dialog } from 'electron';
 import path from 'path'
+import fs from 'fs'
 import url,{fileURLToPath} from 'url'
 import { desktopCapturer } from 'electron';
 
@@ -22,11 +23,13 @@ const __dirname = path.dirname(__filename);
 let win;
 function createWindow(){
     win = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1200,
+        height: 900,
+        title: 'Home Window',
         webPreferences: {
-          nodeIntegration: true,  // Allow access to Node.js APIs like ipcRenderer elase gives import error
-          contextIsolation: false,  // Disable context isolation 
+            sandbox: false,         // to allow screenshot
+            nodeIntegration: true,  // Allow access to Node.js APIs like ipcRenderer elase gives import error
+            contextIsolation: false,  // Disable context isolation 
         }
       });
 
@@ -36,7 +39,7 @@ function createWindow(){
         slashes: true
     }))
 
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
     win.on('closed',()=>{
         win = null;
     })
@@ -49,7 +52,13 @@ ipc.on('start-game', ()=>{
     let gameWin;
     gameWin = new BrowserWindow({
         width: 400,
-        height: 300
+        height: 300,
+        title: 'Game Window',
+        webPreferences: {
+            sandbox: false,         // to allow screenshot
+            nodeIntegration: true,  // Allow access to Node.js APIs like ipcRenderer elase gives import error
+            contextIsolation: false,  // Disable context isolation 
+          }
     });
 
     gameWin.loadURL(url.format({
@@ -58,16 +67,55 @@ ipc.on('start-game', ()=>{
         slashes: true
     }))
 
-    gameWin.webContents.openDevTools();
+    // gameWin.webContents.openDevTools();
 })
 
-//screenshot
+// score update
+ipc.on('increment-score', ()=>{
+    win.webContents.send('increment-score')
+})
+
+// screenshot capture
+let image;
 ipc.on('capture',()=>{
     // returns array of windows/screen objects, from there we choose the first image
-    desktopCapturer.getSources({types:['screen']}).then(sources=>{
-        let image = sources[0].thumbnail.toDataURL();
+    desktopCapturer.getSources({types:['screen'],thumbnailSize: { width: 1280, height: 720 }}).then(sources=>{
+
+        console.log(sources);
+        // const targetSource = sources.find(source => source.name === 'Play');     // finding by title name
+        // if (!targetSource)  console.error('Window named "Play" not found');
+
+        image = sources[0].thumbnail.toDataURL();
         win.webContents.send('capture',image)
     })
+})
+
+//screenshot save 
+ipc.on('save-image',async ()=>{
+    try{
+        // Ask the user for a file save location
+        const result = await dialog.showSaveDialog({
+            title: 'Save Screenshot',
+            defaultPath: 'screenshot.png',
+            filters: [
+                { name: 'Images', extensions: ['png', 'jpg', 'jpeg'] }
+            ]
+        });
+
+        if (result.canceled) {
+            console.log('Save operation canceled.');
+            return;
+        }
+
+        const savePath = result.filePath;
+        const base64Data = image.replace(/^data:image\/png;base64,/, ''); // Strip metadata prefix
+
+        // Save the file
+        await fs.promises.writeFile(savePath, base64Data, 'base64');
+
+    }catch(err){
+        console.error('Error while sacing image :', err);
+    }
 })
 
 // app Events

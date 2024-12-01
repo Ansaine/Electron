@@ -1,10 +1,10 @@
-// index.js (renderer process)
-const { ipcRenderer } = require('electron');  // Use require instead of import
+const { ipcRenderer } = require('electron');  
 
 const playBtn = document.getElementById('playBtn');
 const captureBtn = document.getElementById('captureBtn');
 const beforeStartForm = document.getElementById("beforeStartForm");
 const afterStartForm = document.getElementById("afterStartForm");
+const scoreValue = document.getElementById("scoreValue");
 
 playBtn.addEventListener('click', (event) => {
   event.preventDefault();           // flickering issue
@@ -21,9 +21,20 @@ captureBtn.addEventListener('click',(event)=>{
   ipcRenderer.send('capture');
 })
 
+//save image to file
+saveBtn.addEventListener('click',(event)=>{
+  event.preventDefault();
+  ipcRenderer.send('save-image');
+})
+
 // receive image and only after that save button appears
 ipcRenderer.on('capture',(event,imageData)=>{
   document.getElementById('image').src=imageData
-  document.getElementById('save').style.display='block'
+  document.getElementById('saveBtn').style.display='block'
+})
+
+//score update
+ipcRenderer.on('increment-score',(event,data)=>{
+  scoreValue.innerHTML= Number(scoreValue.innerHTML)+1;
 })
 
